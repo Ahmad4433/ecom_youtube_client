@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import "./auth.css";
 import { Formik, Form } from "formik";
 import { TextField, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
+import httpAction from "../../utils/httpAction";
+import apis from "../../utils/apis";
+import useProvideHooks from "../../hooks/useProvideHooks";
+import toast from "react-hot-toast";
+import { authActions } from "../../store/auth-slice";
 const Login = () => {
+  const { dispatch, loading, navigate, setLoading } = useProvideHooks();
+
   const initialValue = {
     email: "",
     password: "",
@@ -15,7 +22,28 @@ const Login = () => {
     password: Yup.string().trim().required("Password is required"),
   });
 
-  const submitHandler = () => {};
+  const submitHandler = async (values) => {
+    const data = {
+      url: apis().loginUser,
+      method: "POST",
+      body: { ...values },
+    };
+    setLoading(true);
+    const result = await dispatch(httpAction(data));
+    setLoading(false);
+    if (result?.status) {
+      toast.success(result?.message);
+
+      dispatch(
+        authActions.setAuth({
+          isAuth: true,
+          userId: result?.user?.userId,
+          email: result?.user?.email,
+          role: result?.user?.role,
+        })
+      );
+    }
+  };
 
   return (
     <div className="auth_main">
@@ -63,12 +91,13 @@ const Login = () => {
                 type="password"
               />
               <Button
+                disabled={loading}
                 type="submit"
                 variant="contained"
                 fullWidth
                 color="primary"
               >
-                Login
+                {loading ? "wait..." : "login"}
               </Button>
               <div className="auth_options">
                 <Link to="/register">create a new account?</Link>

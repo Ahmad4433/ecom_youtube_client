@@ -7,9 +7,10 @@ import { Formik, Form } from "formik";
 import httpAction from "../../utils/httpAction";
 import toast from "react-hot-toast";
 import useProvideHooks from "../../hooks/useProvideHooks";
+
 import apis from "../../utils/apis";
 const Register = () => {
-  const { loading, setLoading, dispatch } = useProvideHooks();
+  const { loading, setLoading, dispatch, navigate } = useProvideHooks();
 
   const initialValue = {
     name: "",
@@ -34,6 +35,7 @@ const Register = () => {
     setLoading(false);
     if (result?.status) {
       toast.success(result?.message);
+      navigate("/login");
     }
   };
 

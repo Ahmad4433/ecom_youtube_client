@@ -3,6 +3,8 @@ const apis = () => {
 
   const list = {
     registerUser: `${local}user/register`,
+    loginUser: `${local}user/login`,
+    imageUpload:`${local}image/upload`
   };
 
   return list;
