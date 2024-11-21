@@ -4,11 +4,12 @@ import { IoMdCloudUpload } from "react-icons/io";
 import httpAction from "../../utils/httpAction";
 import apis from "../../utils/apis";
 import useProvideHooks from "../../hooks/useProvideHooks";
+import { ImCancelCircle } from "react-icons/im";
 
-const FileUpload = () => {
+const FileUpload = ({files,setFiles}) => {
   const { dispatch, loading, setLoading } = useProvideHooks();
   const fileRef = useRef();
-  const [files, setFiles] = useState([]);
+  // const [files, setFiles] = useState([]);
   const fileClick = () => {
     if (fileRef.current) {
       fileRef.current.click();
@@ -18,7 +19,9 @@ const FileUpload = () => {
   const fileChnage = async (event) => {
     const formatedArray = Array.from(event.target.files);
 
-    for (let img of formatedArray) {
+    const slicedArry = formatedArray.slice(0, 6 - files.length);
+
+    for (let img of slicedArry) {
       await upload(img);
     }
   };
@@ -41,6 +44,12 @@ const FileUpload = () => {
     }
   }
 
+  const removeHanlder = (index) => {
+    const copy = [...files];
+    copy.splice(index, 1);
+    setFiles(copy);
+  };
+
   return (
     <div className="file_upload_main">
       <div onClick={fileClick} className="file_upload_section">
@@ -59,6 +68,9 @@ const FileUpload = () => {
         {files.map((item, index) => {
           return (
             <div className="single_preview">
+              <span className="single_image_remove">
+                <ImCancelCircle onClick={() => removeHanlder(index)} />
+              </span>
               <img src={item} />
             </div>
           );

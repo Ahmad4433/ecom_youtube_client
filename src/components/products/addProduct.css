@@ -1,0 +1,11 @@
+.add_product_detail {
+  width: 100%;
+  resize: none;
+  padding: 1rem;
+  outline: none;
+  border-color: #ccc;
+  border-radius: 4px;
+  &:focus {
+    border-color: blue;
+  }
+}
